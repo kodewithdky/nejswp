@@ -1,5 +1,6 @@
 import userModel from "../models/userModel.js";
 import { hashedPassword } from "../helpers/hashPassword.js";
+import sendVerificationEmail from "../helpers/emailVerification.js";
 
 //load register page
 const loadRegister = async (req, res) => {
@@ -25,8 +26,9 @@ const insertUser = async (req, res) => {
     });
     //save user data
     let userData = await user.save();
-
+    //send response
     if (userData) {
+      sendVerificationEmail(req.body.name, req.body.email, userData._id);
       res.render("registration", {
         message: "Registration Successfully. Please verify your email.",
       });
@@ -38,4 +40,19 @@ const insertUser = async (req, res) => {
   }
 };
 
-export { loadRegister, insertUser };
+//verify email
+const verifyEmail = async (req, res) => {
+  try {
+    const updateInfo = await userModel.updateOne(
+      { _id: req.query.id },
+      { $set: { is_verified: 1 } }
+    );
+
+    console.log(updateInfo);
+    res.render("emailVerified");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export { loadRegister, insertUser, verifyEmail };

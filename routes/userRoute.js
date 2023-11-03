@@ -1,9 +1,14 @@
 import express from "express";
-import { insertUser, loadRegister } from "../controllers/userController.js";
+import {
+  insertUser,
+  loadRegister,
+  verifyEmail,
+
+} from "../controllers/userController.js";
 import bodyParser from "body-parser";
 import multer from "multer";
-import path  from "path";
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 
 //resolve es path module
 const __filename = fileURLToPath(import.meta.url);
@@ -16,14 +21,14 @@ const user_route = express();
 user_route.set("view engine", "ejs");
 user_route.set("views", "./views/users");
 
-//middleware 
-// user_route.use(bodyParser.json());
-// user_route.use(bodyParser.urlencoded({ extended: true }));
+//middleware
+user_route.use(bodyParser.json());
+user_route.use(bodyParser.urlencoded({ extended: true }));
 
 //setup multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname,"../public/userImages"));
+    cb(null, path.join(__dirname, "../public/userImages"));
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
@@ -35,6 +40,8 @@ const upload = multer({ storage: storage });
 //load file for render
 user_route.get("/register", loadRegister);
 //registration
-user_route.post("/register",upload.single("image"), insertUser);
+user_route.post("/register", upload.single("image"), insertUser);
+//verify email
+user_route.get("/verify", verifyEmail);
 
 export { user_route };
