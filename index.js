@@ -2,9 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
 import morgan from "morgan";
-import bodyParser from "body-parser";
 import cors from "cors";
 import dbConnection from "./config/db.js";
+import {user_route} from "./routes/userRoute.js";
 
 //configure env
 dotenv.config();
@@ -15,13 +15,15 @@ const app = express();
 //database config
 dbConnection();
 
+
 //middleware
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
 //routes
-
+//user-route
+app.use("/", user_route);
 
 //rest api
 app.get("/", (req, res) => {
@@ -29,5 +31,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server Is Running ON Port ${PORT}`.bgCyan.green);
+  console.log(`Server Is Running ON Port ${PORT}`.bgCyan.white);
 });

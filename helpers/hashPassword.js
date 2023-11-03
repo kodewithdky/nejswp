@@ -1,17 +1,17 @@
 import bcrypt from "bcrypt";
-
-const hashedPassword = (password) => {
+//hashing password
+const hashedPassword = async (password) => {
   try {
-    let salt = bcrypt.genSalt(10);
-    return bcrypt.hash(password, salt);
+    let salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
   } catch (error) {
     console.warn(error);
   }
 };
-
-const comparePassword = (password, hashPassword) => {
+//conparing password
+const comparePassword = async (password, hashPassword) => {
   try {
-    return bcrypt.compare(password, hashPassword);
+    return await bcrypt.compare(password, hashPassword);
   } catch (error) {
     console.warn(error);
   }
