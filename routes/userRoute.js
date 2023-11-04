@@ -30,7 +30,7 @@ const __dirname = path.dirname(__filename);
 //user route
 const user_route = express();
 //session middleware
-user_route.use(express.static("public"))
+user_route.use(express.static("public"));
 user_route.use(
   session({
     name: `daffyduck`,
@@ -39,7 +39,7 @@ user_route.use(
     saveUninitialized: false,
     cookie: {
       secure: false, // This will only work if you have https enabled!
-      maxAge: 7 * 24 * 3600 * 1000, // 1 hour
+      maxAge: 7 * 24 * 3600 * 1000, // 1 week
     },
   })
 );
@@ -47,7 +47,7 @@ user_route.use(
 user_route.set("view engine", "ejs");
 user_route.set("views", "./views/users");
 
-//middleware
+//setup body-parser middleware
 user_route.use(bodyParser.json());
 user_route.use(bodyParser.urlencoded({ extended: true }));
 
@@ -63,6 +63,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+//routes
 //load registration file for render
 user_route.get("/register", isLogout, loadRegister);
 //registration
@@ -77,24 +79,23 @@ user_route.post("/login", loginUser);
 // load home file for render
 user_route.get("/home", isLogin, loadHome);
 //logout
-user_route.get("/logout",isLogin,userLogout)
+user_route.get("/logout", isLogin, userLogout);
 //load gorgot file for render
-user_route.get("/forgot",isLogout,forgotLoad)
-//forgot 
-user_route.post("/forgot",forgotPassword)
+user_route.get("/forgot", isLogout, forgotLoad);
+//forgot
+user_route.post("/forgot", forgotPassword);
 //load reset password file for render
-user_route.get("/forgot-password",isLogout,loadResetPassword)
+user_route.get("/forgot-password", isLogout, loadResetPassword);
 //reset password
-user_route.post("/forgot-password",resetPassword)
+user_route.post("/forgot-password", resetPassword);
 //load email verifcation page for rander
-user_route.get("/verification",loadVerification) 
+user_route.get("/verification", loadVerification);
 //verification
-user_route.post("/verification",sendVerificationLink)
+user_route.post("/verification", sendVerificationLink);
 //load profile edit page for render
-user_route.get("/edit-user-profile",isLogin,loadEditProfile)
+user_route.get("/edit-user-profile", isLogin, loadEditProfile);
 //edit profile
-user_route.post("/edit-user-profile",upload.single("image"),editUserProfile)
-
+user_route.post("/edit-user-profile", upload.single("image"), editUserProfile);
 
 //export route
 export { user_route };

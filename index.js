@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 import dbConnection from "./config/db.js";
 import {user_route} from "./routes/userRoute.js";
+import { admin_route } from "./routes/adminRoute.js";
 
 //configure env
 dotenv.config();
@@ -24,6 +25,8 @@ app.use(express.json());
 //routes
 //user-route
 app.use("/", user_route);
+//admin-route
+app.use("/admin", admin_route);
 
 //rest api
 app.get("/", (req, res) => {

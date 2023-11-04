@@ -1,7 +1,10 @@
 <!-- include header -->
 <% include("../layouts/_header.ejs") %>
 <!-- include header -->
-<h1>Your email has been verified!</h1>
+<h1>Page Not Found</h1>
+<% if(typeof message!=="undefined"){ %>
+<h3><%= message%></h3>
+<% } %>
 <!-- include footer -->
 <% include("../layouts/_footer.ejs") %>
 <!-- include footer -->
