@@ -28,6 +28,7 @@ const __dirname = path.dirname(__filename);
 //user route
 const user_route = express();
 //session middleware
+user_route.use(express.static("public"))
 user_route.use(
   session({
     name: `daffyduck`,
@@ -36,7 +37,7 @@ user_route.use(
     saveUninitialized: false,
     cookie: {
       secure: false, // This will only work if you have https enabled!
-      maxAge: 60000, // 1 min
+      maxAge: 7 * 24 * 3600 * 1000, // 1 hour
     },
   })
 );

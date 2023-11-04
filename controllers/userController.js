@@ -95,9 +95,11 @@ const loginUser = async (req, res) => {
 };
 
 //load home page
-const loadHome = (req, res) => {
+const loadHome = async(req, res) => {
   try {
-    res.render("home");
+    //find user details
+    const userData=await userModel.findOne({_id:req.session.userId})
+    res.render("home",{user:userData});
   } catch (error) {
     console.log(error);
   }

@@ -1,6 +1,25 @@
 <!-- include header -->
 <% include("../layouts/_header.ejs") %>
-<h1>This is home page</h1>
+<h1>Welocme! <%=user.name%></h1>
+ <table>
+    <tr>
+        <td><img style="height: 100px; width: 100px;" src="userImages/<%= user.image %>" alt="<%= user.image %>"></td>
+    </tr>
+    <tr>
+        <td>Eamil</td>
+        <td><%= user.email %></td>
+    </tr>
+    <tr>
+        <td>Mobile Number</td>
+        <td><%= user.mobile %></td>
+    </tr>
+    <tr>
+        <td>Verification</td>
+        <td><%= user.is_verified===1 ? "true":"false" %></td>
+    </tr>
+ </table>
+
+ <br><br>
 <a href="/logout">Logout</a>
 <!-- include footer -->
 <% include("../layouts/_footer.ejs") %>
