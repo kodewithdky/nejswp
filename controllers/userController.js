@@ -1,11 +1,11 @@
 import userModel from "../models/userModel.js";
-import { hashedPassword } from "../helpers/hashPassword.js";
+import { comparePassword, hashedPassword } from "../helpers/hashPassword.js";
 import sendVerificationEmail from "../helpers/emailVerification.js";
 
 //load register page
 const loadRegister = async (req, res) => {
   try {
-    res.render("registration");
+    await res.render("registration");
   } catch (error) {
     console.warn(error);
   }
@@ -55,4 +55,67 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-export { loadRegister, insertUser, verifyEmail };
+//load login page
+const loginLoad = async (req, res) => {
+  try {
+    await res.render("login");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//login
+const loginUser = async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  try {
+    //find user
+    const userData = await userModel.findOne({ email: email });
+    if (userData) {
+      //copare password
+      const match = await comparePassword(password, userData.password);
+      if (match) {
+        if (userData.is_verified === 0) {
+          res.render("login", { message: "Please verify your email." });
+        } else {
+          req.session.userId = userData._id;
+          res.redirect("/home");
+        }
+      } else {
+        res.render("login", { message: "Invalid credential." });
+      }
+    } else {
+      res.render("login", { message: "Invalid credential." });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//load home page
+const loadHome = (req, res) => {
+  try {
+    res.render("home");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//logout
+const userLogout = async (req, res) => {
+  try {
+    req.session.destroy()
+    res.redirect("/")
+  } catch (error) {
+    console.log(error);
+  }
+};
+export {
+  loadRegister,
+  insertUser,
+  verifyEmail,
+  loginLoad,
+  loginUser,
+  loadHome,
+  userLogout
+};
