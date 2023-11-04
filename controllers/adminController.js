@@ -43,7 +43,9 @@ const adminLogin = async (req, res) => {
 //load admin home
 const loadAdminHome = async (req, res) => {
   try {
-    res.render("home");
+    const userData = await userModel.findById({ _id: req.session.userId });
+
+    res.render("home", { admin: userData });
   } catch (error) {
     console.log(error);
   }
@@ -113,14 +115,24 @@ const loadForgotAdminPassword = async (req, res) => {
 const forgotAdminPassword = async (req, res) => {
   const password = req.body.password;
   const userId = req.body.userId;
-  console.log(password,userId)
+  console.log(password, userId);
   try {
     const hashPassword = await hashedPassword(password);
     const updatedData = await userModel.findByIdAndUpdate(
       { _id: userId },
       { $set: { password: hashPassword, token: "" } }
     );
-    res.redirect("/admin")
+    res.redirect("/admin");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//admin dashboard
+const adminDashboard = async (req, res) => {
+  try {
+    const userData = await userModel.find({ is_admin: 0 });
+    res.render("admin-dashboard", { users: userData });
   } catch (error) {
     console.log(error);
   }
@@ -135,4 +147,5 @@ export {
   sendLinkForgotAdminPassword,
   loadForgotAdminPassword,
   forgotAdminPassword,
+  adminDashboard,
 };

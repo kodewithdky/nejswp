@@ -1,0 +1,36 @@
+<!-- include header -->
+<% include("../layouts/_header.ejs") %>
+<!-- include header -->
+
+<h1>Admin Dashboard</h1>
+<br>
+<br>
+<table border="1">
+  <tr>
+    <th>Image</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phome</th>
+    <th>Verify</th>
+  </tr>
+  <% if(users.length>0){ 
+    for (let index = 0; index < users.length; index++) { %>
+        <tr>
+            <td><img style="border-radius:50% ;" src="userImages/<%= users[index].image %>" alt="<%=users[index].image %>" height="30px" width="30px"></td>
+            <td><%= users[index].name %></td>
+            <td><%= users[index].email %></td>
+            <td><%= users[index].mobile %></td>
+            <td><%= users[index].is_verified===1?"Verified":"Not verified" %></td>
+        </tr>
+        <%
+    } 
+    }else{
+     %>
+        <tr>
+            <td colspan="5">User Not found</td>
+        </tr>
+  <%} %>
+</table>
+<!-- include footer -->
+<% include("../layouts/_footer.ejs") %>
+<!-- include footer -->

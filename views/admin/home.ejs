@@ -2,8 +2,38 @@
 <% include("../layouts/_header.ejs") %>
 <!-- include header -->
 <h1>Admin Home</h1>
-
-
+<a href="/admin/dashboard">Admin Dashboard</a>
+<br />
+<br />
+<table>
+  <tr>
+    <td>
+      <img
+        style="height: 100px; width: 100px"
+        src="userImages/<%= admin.image %>"
+        alt="<%= admin.image %>"
+      />
+    </td>
+  </tr>
+  <tr>
+    <td>Name:</td>
+    <td><%= admin.name %></td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>Eamil:</td>
+    <td><%= admin.email %></td>
+  </tr>
+  <tr>
+    <td>Mobile:</td>
+    <td><%= admin.mobile %></td>
+  </tr>
+  <tr>
+    <td>Verify:</td>
+    <td><%= admin.is_verified===1 ? "true":"false" %></td>
+  </tr>
+</table>
+<br /><br />
 <a href="admin/logout">Logout</a>
 <!-- include footer -->
 <% include("../layouts/_footer.ejs") %>

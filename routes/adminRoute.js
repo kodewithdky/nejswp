@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
 import {
+  adminDashboard,
   adminLogin,
   forgotAdminPassword,
   loadAdminForgot,
@@ -60,11 +61,13 @@ admin_route.get("/admin/logout", isAdminLogin, logout);
 //load admin forgot page for render
 admin_route.get("/forgot", isAdminLogout, loadAdminForgot);
 //send link for forgot admin password
-admin_route.post("/forgot",sendLinkForgotAdminPassword)
+admin_route.post("/forgot", sendLinkForgotAdminPassword);
 //loadforget andmin password
-admin_route.get("/forgot-password",isAdminLogout,loadForgotAdminPassword)
+admin_route.get("/forgot-password", isAdminLogout, loadForgotAdminPassword);
 //forgot admin password
-admin_route.post("/forgot-password",forgotAdminPassword)
+admin_route.post("/forgot-password", forgotAdminPassword);
+//admin dashbord
+admin_route.get("/dashboard", isAdminLogin, adminDashboard);
 //any route
 admin_route.get("/*", function (req, res) {
   res.redirect("/admin");
