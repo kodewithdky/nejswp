@@ -1,10 +1,14 @@
 import express from "express";
 import {
+  forgotLoad,
+  forgotPassword,
   insertUser,
   loadHome,
   loadRegister,
+  loadResetPassword,
   loginLoad,
   loginUser,
+  resetPassword,
   userLogout,
   verifyEmail,
 } from "../controllers/userController.js";
@@ -65,8 +69,16 @@ user_route.get("/", isLogout, loginLoad);
 user_route.get("/login", isLogout, loginLoad);
 // login
 user_route.post("/login", loginUser);
-// lodad home file for render
+// load home file for render
 user_route.get("/home", isLogin, loadHome);
 //logout
 user_route.get("/logout",isLogin,userLogout)
+//load gorgot file for render
+user_route.get("/forgot",isLogout,forgotLoad)
+//forgot 
+user_route.post("/forgot",forgotPassword)
+//load reset password file for render
+user_route.get("/forgot-password",isLogout,loadResetPassword)
+//reset password
+user_route.post("/forgot-password",resetPassword)
 export { user_route };

@@ -1,24 +1,15 @@
 <!-- include header -->
 <% include("../layouts/_header.ejs") %>
-<h1>User Login</h1>
+<h1>Forgot password</h1>
 <% if(typeof message!=="undefined"){ %>
 <h3><%= message%></h3>
 <% } %>
-<form action="/login" method="post">
+<form action="/forgot" method="post">
   <input type="email" name="email" placeholder="Enter email" required />
   <br /><br />
-  <input
-    type="password"
-    name="password"
-    placeholder="Enter password"
-    required
-  />
-  <br /><br />
-  <input type="submit" value="Login" />
+  <input type="submit" value="Send Reset Link" />
   <br /><br />
 </form>
-
-<a href="/forgot">Forgot Password</a>
 
 <!-- include footer -->
 <% include("../layouts/_footer.ejs") %>

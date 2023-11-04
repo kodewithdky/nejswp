@@ -1,6 +1,8 @@
 import userModel from "../models/userModel.js";
 import { comparePassword, hashedPassword } from "../helpers/hashPassword.js";
 import sendVerificationEmail from "../helpers/emailVerification.js";
+import randomstring from "randomstring";
+import sendResetPasswordEmail from "../helpers/resetPassword.js";
 
 //load register page
 const loadRegister = async (req, res) => {
@@ -104,12 +106,89 @@ const loadHome = (req, res) => {
 //logout
 const userLogout = async (req, res) => {
   try {
-    req.session.destroy()
-    res.redirect("/")
+    req.session.destroy();
+    res.redirect("/");
   } catch (error) {
     console.log(error);
   }
 };
+
+//load forgot page
+const forgotLoad = async (req, res) => {
+  try {
+    res.render("forgot");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//forgot password
+const forgotPassword = async (req, res) => {
+  try {
+    const email = req.body.email;
+    //find user
+    const userData = await userModel.findOne({ email });
+    if (userData) {
+      if (userData.is_verified === 0) {
+        res.render("forgot", { message: "Please verify your email." });
+      } else {
+        const randomString = randomstring.generate();
+        const updatedData = await userModel.updateOne(
+          { email },
+          { $set: { token: randomString } }
+        );
+        sendResetPasswordEmail(userData.name, email, randomString);
+        res.render("forgot", {
+          message: "Please check your mail to reset your password.",
+        });
+      }
+    } else {
+      res.render("forgot", { message: "User email is incorrect." });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//load reset password page
+const loadResetPassword = async (req, res) => {
+  const token = req.query.token;
+
+  try {
+    const tokenData = await userModel.findOne({ token });
+    if (tokenData) {
+      res.render("forgot-password", { userId: tokenData._id });
+    } else {
+      res.render("404", { message: "Page Not Found" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//reset password
+const resetPassword = async (req, res) => {
+  const password = req.body.password;
+  const cpassword = req.body.cpassword;
+  const userId = req.body.userId;
+  //matching password
+  if (password != cpassword) {
+    res.render("forgot-password", { message: "Password does not match." });
+  }
+  //hashed password
+  const hashPassword = await hashedPassword(password);
+  const updatedData = await userModel.findByIdAndUpdate(
+    { _id: userId },
+    { $set: { password: hashPassword, token: "" } }
+  );
+  res.redirect("/");
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//export methods
 export {
   loadRegister,
   insertUser,
@@ -117,5 +196,9 @@ export {
   loginLoad,
   loginUser,
   loadHome,
-  userLogout
+  userLogout,
+  forgotLoad,
+  forgotPassword,
+  loadResetPassword,
+  resetPassword,
 };
