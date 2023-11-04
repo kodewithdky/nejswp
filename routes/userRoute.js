@@ -6,9 +6,11 @@ import {
   loadHome,
   loadRegister,
   loadResetPassword,
+  loadVerification,
   loginLoad,
   loginUser,
   resetPassword,
+  sendVerificationLink,
   userLogout,
   verifyEmail,
 } from "../controllers/userController.js";
@@ -81,4 +83,9 @@ user_route.post("/forgot",forgotPassword)
 user_route.get("/forgot-password",isLogout,loadResetPassword)
 //reset password
 user_route.post("/forgot-password",resetPassword)
+//load email verifcation page for rander
+user_route.get("/verification",loadVerification) 
+//verification
+user_route.post("/verification",sendVerificationLink)
+//export route
 export { user_route };

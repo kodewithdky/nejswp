@@ -188,6 +188,35 @@ const resetPassword = async (req, res) => {
   }
 };
 
+//load verification page
+const loadVerification = (req, res) => {
+  try {
+    res.render("verification");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//send verification link
+const sendVerificationLink=async(req,res)=>{
+  try {
+    const email=req.body.email
+    const userData=await userModel.findOne({email})
+    if(userData){
+       if(userData.is_verified!=0){
+        res.render("verification",{message:"Email allready verified."})
+       }else{
+        sendVerificationEmail(userData.name,email,userData._id)
+        res.render("verification",{message:"Verification link were sended on your email Please check."})
+       }
+    }else{
+      res.render("verification",{message:"This email does not exist."})
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 //export methods
 export {
   loadRegister,
@@ -201,4 +230,6 @@ export {
   forgotPassword,
   loadResetPassword,
   resetPassword,
+  loadVerification,
+  sendVerificationLink
 };
