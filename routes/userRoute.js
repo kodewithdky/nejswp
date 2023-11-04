@@ -1,8 +1,10 @@
 import express from "express";
 import {
+  editUserProfile,
   forgotLoad,
   forgotPassword,
   insertUser,
+  loadEditProfile,
   loadHome,
   loadRegister,
   loadResetPassword,
@@ -88,5 +90,11 @@ user_route.post("/forgot-password",resetPassword)
 user_route.get("/verification",loadVerification) 
 //verification
 user_route.post("/verification",sendVerificationLink)
+//load profile edit page for render
+user_route.get("/edit-user-profile",isLogin,loadEditProfile)
+//edit profile
+user_route.post("/edit-user-profile",upload.single("image"),editUserProfile)
+
+
 //export route
 export { user_route };

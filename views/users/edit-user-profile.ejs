@@ -1,0 +1,48 @@
+<!-- include header -->
+<% include("../layouts/_header.ejs") %>
+<h1>Forgot password</h1>
+<% if(typeof message!=="undefined"){ %>
+<h3><%= message%></h3>
+<% } %>
+
+<img
+  src="userImages/<%= user.image %>"
+  alt="<%= user.image %>"
+  width="100px"
+  height="100px"
+/>
+<br /><br />
+<form action="/edit-user-profile" method="post">
+  <input type="file" name="image" />
+  <br /><br />
+  <input
+    type="text"
+    name="name"
+    value="<%= user.name %>"
+    placeholder="Enter name"
+    required
+  />
+  <input type="hidden" name="userId" value="<%= user._id %>" />
+  <br /><br />
+  <input
+    type="email"
+    name="email"
+    value="<%= user.email %>"
+    placeholder="Enter eamil"
+    required
+  />
+  <br /><br />
+  <input
+    type="text"
+    name="mobile"
+    value="<%= user.mobile %>"
+    placeholder="Enter mobile"
+    required
+  />
+  <br /><br />
+  <input type="submit" value="Update Profile" />
+  <br /><br />
+</form>
+
+<!-- include footer -->
+<% include("../layouts/_footer.ejs") %>

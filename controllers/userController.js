@@ -95,11 +95,11 @@ const loginUser = async (req, res) => {
 };
 
 //load home page
-const loadHome = async(req, res) => {
+const loadHome = async (req, res) => {
   try {
     //find user details
-    const userData=await userModel.findOne({_id:req.session.userId})
-    res.render("home",{user:userData});
+    const userData = await userModel.findOne({ _id: req.session.userId });
+    res.render("home", { user: userData });
   } catch (error) {
     console.log(error);
   }
@@ -200,24 +200,79 @@ const loadVerification = (req, res) => {
 };
 
 //send verification link
-const sendVerificationLink=async(req,res)=>{
+const sendVerificationLink = async (req, res) => {
   try {
-    const email=req.body.email
-    const userData=await userModel.findOne({email})
-    if(userData){
-       if(userData.is_verified!=0){
-        res.render("verification",{message:"Email allready verified."})
-       }else{
-        sendVerificationEmail(userData.name,email,userData._id)
-        res.render("verification",{message:"Verification link were sended on your email Please check."})
-       }
-    }else{
-      res.render("verification",{message:"This email does not exist."})
+    const email = req.body.email;
+    const userData = await userModel.findOne({ email });
+    if (userData) {
+      if (userData.is_verified != 0) {
+        res.render("verification", { message: "Email allready verified." });
+      } else {
+        sendVerificationEmail(userData.name, email, userData._id);
+        res.render("verification", {
+          message: "Verification link were sended on your email Please check.",
+        });
+      }
+    } else {
+      res.render("verification", { message: "This email does not exist." });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
+//load edit profile
+const loadEditProfile = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const userData = await userModel.findById({ _id: id });
+    if (userData) {
+      res.render("edit-user-profile", { user: userData });
+    } else {
+      res.redirect("/home");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//edit profile
+const editUserProfile = async (req, res) => {
+  console.log(req.file);
+  try {
+    if (req.file) {
+      console.log(req.file.filename);
+      const updatedData = await userModel.findByIdAndUpdate(
+        {
+          _id: req.body.userId,
+        },
+        {
+          $set: {
+            name: req.body.name,
+            email: req.body.email,
+            mobile: req.body.mobile,
+            image: req.file.filename,
+          },
+        }
+      );
+    } else {
+      const updatedData = await userModel.findByIdAndUpdate(
+        {
+          _id: req.body.userId,
+        },
+        {
+          $set: {
+            name: req.body.name,
+            email: req.body.email,
+            mobile: req.body.mobile,
+          },
+        }
+      );
+    }
+    res.redirect("/home");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 //export methods
 export {
@@ -233,5 +288,7 @@ export {
   loadResetPassword,
   resetPassword,
   loadVerification,
-  sendVerificationLink
+  sendVerificationLink,
+  loadEditProfile,
+  editUserProfile,
 };
