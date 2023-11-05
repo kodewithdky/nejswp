@@ -25,7 +25,7 @@
             <td><%= users[index].mobile %></td>
             <td><%= users[index].is_verified===1?"Verified":"Not verified" %></td>
             <td><%= users[index].is_admin===1?"Yes":"No" %></td>
-            <td><a href="/admin/edit-user?id=<%=users[index]._id %>">Edit</a></td>
+            <td><a style="text-decoration: none;" href="/admin/edit-user?id=<%=users[index]._id %>">Edit &nbsp; </a><a style="text-decoration: none;" href="/admin/delete-user?id=<%=users[index]._id %>"> &nbsp; Delete</a></td>
 
         </tr>
         <%

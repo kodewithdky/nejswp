@@ -203,7 +203,7 @@ const editUserDetails = async (req, res) => {
   const is_verified = req.body.is_verified;
   const is_admin = req.body.is_admin;
   const id = req.body.id;
-  console.log(name,email,mobile,is_verified,is_admin,id)
+  console.log(name, email, mobile, is_verified, is_admin, id);
   try {
     const updatedData = await userModel.findByIdAndUpdate(
       { _id: id },
@@ -217,7 +217,20 @@ const editUserDetails = async (req, res) => {
         },
       }
     );
-    res.redirect("/admin/dashboard")
+    res.redirect("/admin/dashboard");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//delete user
+const deleteUser = async (req, res) => {
+  const id = req.query.id;
+  try {
+    const user = await userModel.deleteOne({ _id: id });
+    if (user) {
+      res.redirect("/admin/dashboard");
+    }
   } catch (error) {
     console.log(error);
   }
@@ -237,4 +250,5 @@ export {
   addNewUser,
   loadEditUser,
   editUserDetails,
+  deleteUser,
 };

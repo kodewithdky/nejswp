@@ -8,6 +8,7 @@ import {
   addNewUser,
   adminDashboard,
   adminLogin,
+  deleteUser,
   editUserDetails,
   forgotAdminPassword,
   loadAddUser,
@@ -92,6 +93,8 @@ admin_route.post("/new-user",upload.single("image"), addNewUser);
 //load edit user page for render
 admin_route.get("/edit-user",isAdminLogin,loadEditUser)
 admin_route.post("/edit-user",editUserDetails)
+//delete user
+admin_route.get("/delete-user",isAdminLogin,deleteUser)
 //any route
 admin_route.get("/*", function (req, res) {
   res.redirect("/admin");
