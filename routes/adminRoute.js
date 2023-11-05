@@ -10,6 +10,7 @@ import {
   adminLogin,
   deleteUser,
   editUserDetails,
+  exportUsers,
   forgotAdminPassword,
   loadAddUser,
   loadAdminForgot,
@@ -95,6 +96,8 @@ admin_route.get("/edit-user",isAdminLogin,loadEditUser)
 admin_route.post("/edit-user",editUserDetails)
 //delete user
 admin_route.get("/delete-user",isAdminLogin,deleteUser)
+//export user
+admin_route.get("/export-user",isAdminLogin,exportUsers)
 //any route
 admin_route.get("/*", function (req, res) {
   res.redirect("/admin");

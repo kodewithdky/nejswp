@@ -1,4 +1,5 @@
 import randomstring from "randomstring";
+import excelJS from "exceljs";
 import { comparePassword, hashedPassword } from "../helpers/hashPassword.js";
 import userModel from "../models/userModel.js";
 import sendResetAdminPasswordEmail from "../helpers/resetAdminPassword.js";
@@ -235,6 +236,51 @@ const deleteUser = async (req, res) => {
     console.log(error);
   }
 };
+
+//export user
+const exportUsers = async (req, res) => {
+  try {
+    const workbook = new excelJS.Workbook();
+    const workSheet = workbook.addWorksheet("My Users");
+    workSheet.columns = [
+      { headers: "S no.", key: "s_no" },
+      { headers: "Name", key: "name" },
+      { headers: "Email", key: "email" },
+      { headers: "Phone", key: "mobile" },
+      { headers: "Image", key: "image" },
+      { headers: "Admin", key: "is_admin" },
+      { headers: "Verified", key: "is_verified" },
+    ];
+
+    let counter=1;
+    const usersData=await userModel.find({__v:0})
+    usersData.forEach((user)=>{
+      user.s_no=counter
+      workSheet.addRow(user)
+
+      workSheet.getRow(counter).eachCell((cell)=>{
+        cell.font={bold:true}
+      })
+      counter++
+
+    })
+
+
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
+    )
+    res.setHeader(
+      "Content-Disposition",`attachment; filename=users.xlsx`
+    )
+    return workbook.xlsx.write(res).then(()=>{
+      res.status(200)
+    })
+  } catch (error) {
+    console.log(error);
+  }
+};
 //export methods
 export {
   loadAdminHome,
@@ -251,4 +297,5 @@ export {
   loadEditUser,
   editUserDetails,
   deleteUser,
+  exportUsers,
 };
