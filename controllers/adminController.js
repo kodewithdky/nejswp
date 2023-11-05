@@ -132,9 +132,46 @@ const forgotAdminPassword = async (req, res) => {
 
 //admin dashboard
 const adminDashboard = async (req, res) => {
+  let search = "";
+  if (req.query.search) {
+    search = req.query.search;
+  }
+
+  let page = 1;
+  if (req.query.page) {
+    page = req.query.page;
+  }
+  const limit = 5;
   try {
-    const userData = await userModel.find({ __v: 0 });
-    res.render("admin-dashboard", { users: userData });
+    const userData = await userModel
+      .find({
+        __v: 0,
+        $or: [
+          { name: { $regex: ".*" + search + ".*", $options: "i" } },
+          { email: { $regex: ".*" + search + ".*", $options: "i" } },
+          { mobile: { $regex: ".*" + search + ".*", $options: "i" } },
+        ],
+      })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec();
+
+    const count = await userModel
+      .find({
+        __v: 0,
+        $or: [
+          { name: { $regex: ".*" + search + ".*", $options: "i" } },
+          { email: { $regex: ".*" + search + ".*", $options: "i" } },
+          { mobile: { $regex: ".*" + search + ".*", $options: "i" } },
+        ],
+      })
+      .countDocuments();
+
+    res.render("admin-dashboard", {
+      users: userData,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -252,31 +289,26 @@ const exportUsers = async (req, res) => {
       { headers: "Verified", key: "is_verified" },
     ];
 
-    let counter=1;
-    const usersData=await userModel.find({__v:0})
-    usersData.forEach((user)=>{
-      user.s_no=counter
-      workSheet.addRow(user)
+    let counter = 1;
+    const usersData = await userModel.find({ __v: 0 });
+    usersData.forEach((user) => {
+      user.s_no = counter;
+      workSheet.addRow(user);
 
-      workSheet.getRow(counter).eachCell((cell)=>{
-        cell.font={bold:true}
-      })
-      counter++
-
-    })
-
-
+      workSheet.getRow(counter).eachCell((cell) => {
+        cell.font = { bold: true };
+      });
+      counter++;
+    });
 
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
-    )
-    res.setHeader(
-      "Content-Disposition",`attachment; filename=users.xlsx`
-    )
-    return workbook.xlsx.write(res).then(()=>{
-      res.status(200)
-    })
+    );
+    res.setHeader("Content-Disposition", `attachment; filename=users.xlsx`);
+    return workbook.xlsx.write(res).then(() => {
+      res.status(200);
+    });
   } catch (error) {
     console.log(error);
   }

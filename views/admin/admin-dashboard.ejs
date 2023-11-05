@@ -5,6 +5,11 @@
 <h1>Admin Dashboard</h1>
 <a href="/admin/new-user">Add User &nbsp;</a>
 <a href="/admin/export-user">&nbsp; Export User</a>
+<br><br>
+<form action="">
+  <input type="text" placeholder="Search user" name="search">
+  <input type="submit" value="Search">
+</form>
 <br>
 <br>
 <table border="1">
@@ -38,7 +43,16 @@
         </tr>
   <%} %>
 </table>
-
+<br><br>
+ <% 
+ for(let j=1;j<=totalPages;j++){
+  %>
+  <a style="text-decoration: none;"  href="?page=<%=j%>">&nbsp;&nbsp;<%=j%></a>
+  <%
+ }
+ %>
+ <br><br>
+ 
 <!-- include footer -->
 <% include("../layouts/_footer.ejs") %>
 <!-- include footer -->
