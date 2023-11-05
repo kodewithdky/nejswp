@@ -1,7 +1,7 @@
 <!-- include header -->
 <% include("../layouts/_header.ejs") %>
 <!-- include header -->
-<h1>Welocme! <%=user.name%></h1>
+<h1>Welocme! to user management system </h1>
 <table>
   <tr>
     <td>
@@ -11,6 +11,10 @@
         alt="<%= user.image %>"
       />
     </td>
+  </tr>
+  <tr>
+    <td>Name:</td>
+    <td><%=user.name%></td>
   </tr>
   <tr>
     <td>Eamil:</td>

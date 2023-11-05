@@ -61,7 +61,6 @@ const storage = multer.diskStorage({
     cb(null, name);
   },
 });
-
 const upload = multer({ storage: storage });
 
 //routes

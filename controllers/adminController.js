@@ -2,6 +2,7 @@ import randomstring from "randomstring";
 import { comparePassword, hashedPassword } from "../helpers/hashPassword.js";
 import userModel from "../models/userModel.js";
 import sendResetAdminPasswordEmail from "../helpers/resetAdminPassword.js";
+import sendAddedUserEmail from "../helpers/addUserMail.js";
 
 //load admin login
 const loadAdminLogin = async (req, res) => {
@@ -137,6 +138,48 @@ const adminDashboard = async (req, res) => {
     console.log(error);
   }
 };
+
+//load add user
+const loadAddUser = (req, res) => {
+  try {
+    res.render("new-user");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//add new user
+const addNewUser = async (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const mobile = req.body.mobile;
+  const password = randomstring.generate(8);
+  const image = req.file.filename;
+  console.log(name,email,mobile,password,image)
+  try {
+    const hashPassword = await hashedPassword(password);
+    const user = await new userModel({
+      name,
+      email,
+      mobile,
+      image,
+      is_admin: 0,
+      password: hashPassword,
+    });
+
+    const userData = await user.save();
+    if (userData) {
+      sendAddedUserEmail(name, email, password, userData._id);
+      return res.redirect("/admin/dashboard");
+    } else {
+      res.render("new-user", {
+        message: "Something went wrong while adding new user.",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 //export methods
 export {
   loadAdminHome,
@@ -148,4 +191,6 @@ export {
   loadForgotAdminPassword,
   forgotAdminPassword,
   adminDashboard,
+  loadAddUser,
+  addNewUser,
 };

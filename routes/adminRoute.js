@@ -3,10 +3,13 @@ import bodyParser from "body-parser";
 import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
+import multer from "multer";
 import {
+  addNewUser,
   adminDashboard,
   adminLogin,
   forgotAdminPassword,
+  loadAddUser,
   loadAdminForgot,
   loadAdminHome,
   loadAdminLogin,
@@ -46,6 +49,18 @@ admin_route.set("views", "./views/admin");
 admin_route.use(bodyParser.json());
 admin_route.use(bodyParser.urlencoded({ extended: true }));
 
+//setup multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../public/userImages"));
+  },
+  filename: function (req, file, cb) {
+    const name = Date.now() + "-" + file.originalname;
+    cb(null, name);
+  },
+});
+const upload = multer({ storage: storage });
+
 //routes
 
 //export route
@@ -68,6 +83,10 @@ admin_route.get("/forgot-password", isAdminLogout, loadForgotAdminPassword);
 admin_route.post("/forgot-password", forgotAdminPassword);
 //admin dashbord
 admin_route.get("/dashboard", isAdminLogin, adminDashboard);
+//load add user page for render
+admin_route.get("/new-user", isAdminLogin, loadAddUser);
+//add user
+admin_route.post("/new-user",upload.single("image"), addNewUser);
 //any route
 admin_route.get("/*", function (req, res) {
   res.redirect("/admin");
