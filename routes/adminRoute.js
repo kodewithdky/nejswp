@@ -8,11 +8,13 @@ import {
   addNewUser,
   adminDashboard,
   adminLogin,
+  editUserDetails,
   forgotAdminPassword,
   loadAddUser,
   loadAdminForgot,
   loadAdminHome,
   loadAdminLogin,
+  loadEditUser,
   loadForgotAdminPassword,
   logout,
   sendLinkForgotAdminPassword,
@@ -87,6 +89,9 @@ admin_route.get("/dashboard", isAdminLogin, adminDashboard);
 admin_route.get("/new-user", isAdminLogin, loadAddUser);
 //add user
 admin_route.post("/new-user",upload.single("image"), addNewUser);
+//load edit user page for render
+admin_route.get("/edit-user",isAdminLogin,loadEditUser)
+admin_route.post("/edit-user",editUserDetails)
 //any route
 admin_route.get("/*", function (req, res) {
   res.redirect("/admin");

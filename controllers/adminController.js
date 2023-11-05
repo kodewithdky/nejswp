@@ -132,7 +132,7 @@ const forgotAdminPassword = async (req, res) => {
 //admin dashboard
 const adminDashboard = async (req, res) => {
   try {
-    const userData = await userModel.find({ is_admin: 0 });
+    const userData = await userModel.find({ __v: 0 });
     res.render("admin-dashboard", { users: userData });
   } catch (error) {
     console.log(error);
@@ -155,7 +155,7 @@ const addNewUser = async (req, res) => {
   const mobile = req.body.mobile;
   const password = randomstring.generate(8);
   const image = req.file.filename;
-  console.log(name,email,mobile,password,image)
+  console.log(name, email, mobile, password, image);
   try {
     const hashPassword = await hashedPassword(password);
     const user = await new userModel({
@@ -180,6 +180,48 @@ const addNewUser = async (req, res) => {
     console.log(error);
   }
 };
+
+//load edit user
+const loadEditUser = async (req, res) => {
+  const id = await req.query.id;
+  try {
+    const userData = await userModel.findById({ _id: id });
+    if (userData) {
+      res.render("edit-user", { user: userData });
+    } else {
+      res.render("edit-user", { message: "Something went wrong." });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+//edit user details
+const editUserDetails = async (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const mobile = req.body.mobile;
+  const is_verified = req.body.is_verified;
+  const is_admin = req.body.is_admin;
+  const id = req.body.id;
+  console.log(name,email,mobile,is_verified,is_admin,id)
+  try {
+    const updatedData = await userModel.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          name,
+          email,
+          mobile,
+          is_verified,
+          is_admin,
+        },
+      }
+    );
+    res.redirect("/admin/dashboard")
+  } catch (error) {
+    console.log(error);
+  }
+};
 //export methods
 export {
   loadAdminHome,
@@ -193,4 +235,6 @@ export {
   adminDashboard,
   loadAddUser,
   addNewUser,
+  loadEditUser,
+  editUserDetails,
 };

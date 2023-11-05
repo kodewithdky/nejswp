@@ -1,0 +1,36 @@
+<!-- include header -->
+<% include("../layouts/_header.ejs") %>
+<!-- include header -->
+<h1>Edit User Details</h1>
+<a href="/admin/dashboard">Back</a>
+<br /><br />
+<% if(typeof message!=="undefined"){ %>
+<h3><%= message%></h3>
+<% } %>
+<form action="" method="post">
+  <input type="text" name="name" placeholder="Enter name" value="<%= user.name %>" required />
+  <br /><br />
+  <input type="email" name="email" placeholder="Enter email" value="<%=user.email%>" required />
+  <br /><br />
+  <input type="text" name="mobile" placeholder="Enter mobile" value="<%= user.mobile %>" required />
+  <br /><br />
+  <label for="is_verified">Verify</label>
+  <input type="radio" name="is_verified" value="1" <% if(user.is_verified===1){%>checked<%}%>/>
+  <br /><br />
+  <label for="is_verified">Unverify</label>
+  <input type="radio" name="is_verified" value="0" <% if(user.is_verified===0){%>checked<%}%> />
+  <br /><br />
+  <label for="is_admin">Admin</label>
+  <input type="radio" name="is_admin" value="1" <% if(user.is_admin===1){%>checked<%}%>/>
+  <br /><br />
+  <label for="is_admin">Not Admit</label>
+  <input type="radio" name="is_admin" value="0" <% if(user.is_admin===0){%>checked<%}%>/>
+  <br /><br />
+  <input type="hidden" name="id" value="<%= user._id %>">
+  <input type="submit" value="Update Details" />
+  <br /><br />
+</form>
+<br /><br />
+<!-- include footer -->
+<% include("../layouts/_footer.ejs") %>
+<!-- include footer -->

@@ -13,6 +13,8 @@
     <th>Email</th>
     <th>Phome</th>
     <th>Verify</th>
+    <th>Admin</th>
+    <th>Action</th>
   </tr>
   <% if(users.length>0){ 
     for (let index = 0; index < users.length; index++) { %>
@@ -22,6 +24,9 @@
             <td><%= users[index].email %></td>
             <td><%= users[index].mobile %></td>
             <td><%= users[index].is_verified===1?"Verified":"Not verified" %></td>
+            <td><%= users[index].is_admin===1?"Yes":"No" %></td>
+            <td><a href="/admin/edit-user?id=<%=users[index]._id %>">Edit</a></td>
+
         </tr>
         <%
     } 
